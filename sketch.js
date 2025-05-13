@@ -1,51 +1,46 @@
-const testo = "WTF";
-const fontSize = 120;
-const parti = 40;
-const sfasamento = 4;
-
-//
-
-/** @type {Font} */
-let font;
+let spacing = 100;
+let ovals = [];
+let myFont;
 
 function preload() {
-  font = loadFont("./fonts/Adobe-Jenson-Pro-Bold-Caption.ttf");
+
+myFont = loadFont('HFSANTAMONICA-2.TTF'); 
 }
 
 function setup() {
-  createCanvas(400, 400, "svg");
-  addDownloadButton();
-
-  rectMode(CENTER);
+  createCanvas(595,842,"svg");
   angleMode(DEGREES);
+  noStroke();
+  textFont(myFont);
+  textAlign(CENTER, CENTER);
+  textSize(20);
+  fill(50); 
 
-  noLoop(); // Opzionale
+  for (let x = 100; x < width; x += spacing) {
+    for (let y = 100; y < height; y += spacing) {
+      ovals.push({
+        x, y,angle: random(360),speed: random(-1, 1),
+        color: lerpColor(color("LightSkyBlue"), color("pink"), random()),
+        label: "YU" 
+      });
+    }
+  }
 }
 
 function draw() {
-  clear(); // Non cancellare!
+  clear();
+  background(250);
+  addDownloadButton()
 
-  textFont(font);
-  textLeading(fontSize);
-  textSize(fontSize);
-
-  const text_width = textWidth(testo);
-  const h_parti = fontSize / parti;
-
-  noStroke();
-  fill(0);
-
-  for (let i = 0; i < parti; i++) {
+  for (let o of ovals) {
     push();
-    translate(text_width / 2, 0);
-    translate(random(-sfasamento, sfasamento), 0);
-
-    beginClip();
-    rect(0, i * h_parti + h_parti / 2, text_width, h_parti);
-    endClip();
-
-    textSVG(testo, -text_width / 2, fontSize);
-
+    translate(o.x, o.y);
+    rotate(o.angle);
+    fill(o.color);
+    ellipse(0, 0, 100, 60);
+    fill("yellow"); // 黑色文字
+    text(o.label, 0, 0); // 在椭圆中心绘制文字
     pop();
+    o.angle += o.speed;
   }
 }
